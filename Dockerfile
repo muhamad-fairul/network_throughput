@@ -1,3 +1,4 @@
+FROM ubuntu:18.04
 FROM multicloud/netcat
 MAINTAINER andrelaszlo
 
@@ -12,10 +13,10 @@ RUN sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid
 ENV NOTVISIBLE="in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
-EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
-
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
