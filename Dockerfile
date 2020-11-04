@@ -1,4 +1,3 @@
-network throughput
 FROM multicloud/netcat
 MAINTAINER andrelaszlo
 
