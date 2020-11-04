@@ -1,4 +1,3 @@
-FROM ubuntu:18.04
 FROM multicloud/netcat
 MAINTAINER andrelaszlo
 
