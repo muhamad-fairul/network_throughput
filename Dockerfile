@@ -3,7 +3,7 @@ MAINTAINER andrelaszlo
 
 RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
-RUN echo 'root:THEPASSWORDYOUCREATED' | chpasswd
+RUN echo 'root:Intel123!' | chpasswd
 RUN sed -i 's/#*PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 
 # SSH login fix. Otherwise user is kicked off after login
