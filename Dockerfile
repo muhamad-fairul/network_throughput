@@ -1,11 +1,6 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 FROM multicloud/netcat
 MAINTAINER andrelaszlo
-
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod a+x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
 
 RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
@@ -20,3 +15,8 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
+
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
