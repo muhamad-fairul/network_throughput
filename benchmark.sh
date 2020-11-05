@@ -16,6 +16,7 @@ RUN sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid
 
 ENV NOTVISIBLE="in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
+RUN chmod +x benchmark.sh
 RUN ./benchmark.sh >> resultbenchmark.txt
 RUN ls
 EXPOSE 22
