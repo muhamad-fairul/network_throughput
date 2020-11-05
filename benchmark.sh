@@ -1,20 +1,22 @@
-#! /bin/bash
+FROM ubuntu:18.04
+FROM multicloud/netcat
 
-MEGABYTES=100
-TMPFILE=$(mktemp)
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN mkdir /net_throughput
+ADD benchmark.sh /net_throughput
+ADD entrypoint.sh /net_throughput
+WORKDIR /net_throughput
+RUN pwd
+RUN echo 'root:Intel123!' | chpasswd
+RUN sed -i 's/#*PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 
-echo "Building docker benchmark container"
-docker build -t netcat . > /dev/null
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd
 
-container=$(docker run -d --publish=8000:8000 netcat -l -p 8000)
-
-sleep 1
-
-echo "Generating test data"
-yes helloworld | dd if=/dev/stdin of=$TMPFILE bs=1M count=$MEGABYTES iflag=fullblock 2> /dev/null
-
-echo "Sending ${MEGABYTES}MiB to docker container"
-
-pv "$TMPFILE" | netcat localhost 8000
-
-rm "$TMPFILE"
+ENV NOTVISIBLE="in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+RUN ./benchmark.sh >> resultbenchmark.txt
+RUN ls
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
